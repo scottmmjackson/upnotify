@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+die() {
+  echo "FAILED TO COMPILE"
+  exit 1
+}
+
 compile() {
   local cargo_target=$1
   local goos=$2
-  cargo build --release --target "${cargo_target}" || return
+  cargo build --release --target "${cargo_target}" || die
   cp "target/${cargo_target}/release/upnotify" "dist/upnotify_${goos}/"
 }
 
