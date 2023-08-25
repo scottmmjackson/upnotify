@@ -37,6 +37,4 @@ case $os in
     ;;
 esac
 
-# compile x86_64-unknown-linux-gnu linux_amd64
-compile x86_64-apple-darwin "${target}"
-compile aarch64-apple-darwin darwin_arm64
+compile "${cargo_target}" "${target}"
