@@ -1,6 +1,6 @@
 builds:
   - main: dummy.go
-    goarch: [ amd64, aarch64 ]
+    goarch: [ amd64, arm64 ]
     binary: dummy
     hooks:
       post: sh build/cross-release.sh

@@ -9,4 +9,4 @@ compile() {
 
 # compile x86_64-unknown-linux-gnu linux_amd64
 compile x86_64-apple-darwin darwin_amd64
-compile aarch64-apple-darwin darwin_aarch64
+compile aarch64-apple-darwin darwin_arm64
