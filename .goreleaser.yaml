@@ -2,7 +2,7 @@ builds:
   - main: dummy.go
     goarch: [ amd64, arm64 ]
     goos: [ darwin ]
-    binary: dummy
+    binary: upnotify
     hooks:
       post: sh build/cross-release.sh {{.Target}} {{.Os}} {{.Arch}}
 
@@ -31,12 +31,6 @@ nfpms:
       - rpm
       - termux.deb
       - archlinux
-# Disable snapcrafts, they don't work
-#snapcrafts:
-#  -
-#    publish:  false
-#    summary: Converts pull request tasks from bitbucket to todo txt tasks
-#    description: Converts pull request tasks from bitbucket to todo txt tasks
 brews:
   -
     tap:
