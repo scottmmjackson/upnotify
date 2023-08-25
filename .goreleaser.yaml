@@ -1,6 +1,7 @@
 builds:
   - main: dummy.go
     goarch: [ amd64, arm64 ]
+    goos: [ darwin ]
     binary: dummy
     hooks:
       post: sh build/cross-release.sh {{.Target}} {{.Os}} {{.Arch}}
