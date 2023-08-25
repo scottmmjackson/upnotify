@@ -4,7 +4,7 @@ compile() {
   local target=$1
   local binname=$2
   cargo build --release --target "${target}" || return
-  mkdir -p "dist/${binname}" && cp "target/${target}/release/upnotify" "dist/${binname}/"
+  mkdir -p "dist/upnotify_${binname}" && cp "target/${target}/release/upnotify" "dist/${binname}/"
 }
 
 # compile x86_64-unknown-linux-gnu linux_amd64
