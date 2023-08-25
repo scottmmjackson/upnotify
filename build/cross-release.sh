@@ -5,6 +5,7 @@ compile() {
   local goos=$2
   cargo build --release --target "${cargo_target}" || return
   cp "target/${cargo_target}/release/upnotify" "dist/upnotify_${goos}/"
+  rm "dist/upnotify_${goos}/dummy"
 }
 
 target=$1
