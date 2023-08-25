@@ -3,7 +3,7 @@ builds:
     goarch: [ amd64, arm64 ]
     binary: dummy
     hooks:
-      post: sh build/cross-release.sh
+      post: sh build/cross-release.sh {{.Target}} {{.Os}} {{.Arch}}
 
 archives:
   - format: tar.gz
