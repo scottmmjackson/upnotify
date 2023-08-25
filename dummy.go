@@ -1,1 +1,5 @@
 package dummy
+
+func main() {
+
+}
