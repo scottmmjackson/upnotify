@@ -1,7 +1,7 @@
 builds:
   - main: dummy.go
     goarch: [ amd64, arm64 ]
-    goos: [ darwin ]
+    goos: [ darwin, linux ]
     binary: upnotify
     hooks:
       post: sh build/cross-release.sh {{.Target}} {{.Os}} {{.Arch}}

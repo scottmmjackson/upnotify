@@ -25,17 +25,17 @@ case $os in
   esac
   ;;
   linux) case $arch in
-    arm64)
+    arm64) cargo_target=aarch64-unknown-linux-gnu
       ;;
-    amd64)
+    amd64) cargo_target=x86_64-unknown-linux-gnu
       ;;
   esac
   ;;
   windows)
     case $arch in
-        arm64)
+        arm64) cargo_target=aarch64-pc-windows-msvc
           ;;
-        amd64)
+        amd64) cargo_target=x86_64-pc-windows-gnu
           ;;
     esac
     ;;
