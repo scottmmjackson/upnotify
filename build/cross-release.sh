@@ -7,6 +7,14 @@ compile() {
   cp "target/${cargo_target}/release/upnotify" "dist/upnotify_${goos}/"
 }
 
+target=$1
+os=$2
+arch=$3
+
+case $target in
+
+esac
+
 # compile x86_64-unknown-linux-gnu linux_amd64
-compile x86_64-apple-darwin darwin_amd64
+compile x86_64-apple-darwin "${target}"
 compile aarch64-apple-darwin darwin_arm64
