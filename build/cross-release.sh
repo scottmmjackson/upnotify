@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 compile() {
-  local target=$1
-  local binname=$2
-  cargo build --release --target "${target}" || return
-  mkdir -p "dist/upnotify_${binname}" && cp "target/${target}/release/upnotify" "dist/${binname}/"
+  local cargo_target=$1
+  local goos=$2
+  cargo build --release --target "${cargo_target}" || return
+  cp "target/${cargo_target}/release/upnotify" "dist/${goos}/"
 }
 
 # compile x86_64-unknown-linux-gnu linux_amd64
