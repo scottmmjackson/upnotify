@@ -8,7 +8,10 @@ die() {
 compile() {
   local cargo_target=$1
   local goos=$2
-  cargo build --release --target "${cargo_target}" || die
+  docker run --rm -v"$(pwd)":/app liuchong/rustup:nightly sh -c '
+  cd /app &&
+  cargo build --release --target "${cargo_target}"
+  ' || die
   cp "target/${cargo_target}/release/upnotify" "dist/upnotify_${goos}/"
 }
 
