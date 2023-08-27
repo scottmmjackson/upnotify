@@ -1,0 +1,19 @@
+# nfpm example configuration file
+#
+# check https://nfpm.goreleaser.com/configuration for detailed usage
+#
+name: "upnotify"
+arch: "${ARCH}"
+platform: "${PLATFORM}"
+version: "${VERSION}"
+section: "default"
+priority: "extra"
+provides:
+  - "upnotify"
+maintainer: "Scott Jackson <scottmmjackson@gmail.com>"
+description: Tool to log to standard out when the status of a web service changes.
+homepage: "https://github.com/scottmmjackson/upnotify"
+license: "BSD 3.0"
+contents:
+- src: ${UPNOTIFY_BINARY}
+  dst: /usr/bin/upnotify

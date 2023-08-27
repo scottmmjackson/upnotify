@@ -12,7 +12,7 @@ enum Result {
 }
 
 fn main() {
-    let cli = Command::new("HTTP Status Monitor")
+    let cli = Command::new("Upnotify")
         .version("0.1.0")
         .author("Scott Jackson")
         .about("Monitors HTTP status changes of a URL")
