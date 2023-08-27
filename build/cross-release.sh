@@ -11,7 +11,7 @@ compile() {
 #  docker run --rm --name "upnotify-release-${cargo_target}" --user "$(id -u)":"$(id -g)" -v "$PWD":/usr/src/myapp \
 #   -w /usr/src/myapp rust:1.70 sh -c \
 #   "rustup target add $cargo_target && cargo build --release --target ${cargo_target}" || die
-  cargo build --release "${cargo_target}" || die
+  cargo build --release --target "${cargo_target}" || die
   cp "target/${cargo_target}/release/upnotify" "dist/upnotify_${goos}/"
 }
 
