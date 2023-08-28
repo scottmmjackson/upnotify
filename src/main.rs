@@ -1,6 +1,7 @@
 use std::thread::sleep;
 use std::time::Duration;
-use clap::{arg, ArgAction, Command};
+
+use clap::{arg, ArgAction, Command, crate_authors, crate_description, crate_name, crate_version};
 use reqwest::blocking::Client;
 use reqwest::StatusCode;
 
@@ -8,14 +9,14 @@ enum Result {
     StatusCode(StatusCode),
     ConnectError(reqwest::Error),
     OtherError(reqwest::Error),
-    None
+    None,
 }
 
 fn main() {
-    let cli = Command::new("Upnotify")
-        .version("0.1.0")
-        .author("Scott Jackson")
-        .about("Monitors HTTP status changes of a URL")
+    let cli = Command::new(crate_name!())
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(crate_description!())
         .arg(
             arg!(--url <VALUE>).required(true).action(ArgAction::Set)
         )
@@ -24,7 +25,7 @@ fn main() {
     let url = cli.get_one::<String>("url").expect("required");
     let client = Client::builder()
         .danger_accept_invalid_certs(true)
-        .build().unwrap_or_else(| _result | panic!("Unable to create client!"));
+        .build().unwrap_or_else(|_result| panic!("Unable to create client!"));
     let mut previous_status_option: Result = Result::None;
 
     loop {
@@ -54,8 +55,7 @@ fn main() {
                         }
                     }
                 }
-                previous_status_option = if error.is_connect() { Result::ConnectError(error) }
-                    else { Result::OtherError(error) }
+                previous_status_option = if error.is_connect() { Result::ConnectError(error) } else { Result::OtherError(error) }
             }
         }
         sleep(Duration::from_secs(5));
