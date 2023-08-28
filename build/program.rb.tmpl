@@ -2,48 +2,48 @@
 # frozen_string_literal: true
 
 class Upnotify < Formula
-    desc "Tool to log to standard out when the status of a web service changes."
-    homepage "https://github.com/scottmmjackson/upnotify"
-    version "${VERSION}"
+  desc "Tool to log to standard out when the status of a web service changes."
+  homepage "https://github.com/scottmmjackson/upnotify"
+  version "${VERSION}"
 
-    on_macos do
-        if Hardware::CPU.intel?
-            url "${X86_DARWIN_RELEASE_URL}"
-            sha256 "${X86_DARWIN_RELEASE_SHA}"
+  on_macos do
+    if Hardware::CPU.intel?
+      url "${X86_DARWIN_RELEASE_URL}"
+      sha256 "${X86_DARWIN_RELEASE_SHA}"
 
-            def install
-                bin.install "upnotify"
-            end
-        end
-        if Hardware::CPU.intel?
-            url "${ARM64_DARWIN_RELEASE_URL}"
-            sha256 "${ARM64_DARWIN_RELEASE_SHA}"
-
-            def install
-                bin.install "upnotify"
-            end
-        end
+      def install
+        bin.install "upnotify"
+      end
     end
-      on_linux do
-        if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-            url "${ARM64_LINUX_RELEASE_URL}"
-            sha256 "${ARM64_LINUX_RELEASE_SHA}"
+    if Hardware::CPU.arm?
+      url "${ARM64_DARWIN_RELEASE_URL}"
+      sha256 "${ARM64_DARWIN_RELEASE_SHA}"
 
-          def install
-            bin.install "bb2todotxt"
-          end
-        end
-        if Hardware::CPU.intel?
-            url "${X86_LINUX_RELEASE_URL}"
-            sha256 "${X86_LINUX_RELEASE_SHA}"
-
-          def install
-            bin.install "bb2todotxt"
-          end
-        end
+      def install
+        bin.install "upnotify"
       end
+    end
+  end
+  on_linux do
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "${ARM64_LINUX_RELEASE_URL}"
+      sha256 "${ARM64_LINUX_RELEASE_SHA}"
 
-      test do
-        system "#{bin}/upnotify --version"
+      def install
+        bin.install "upnotify"
       end
+    end
+    if Hardware::CPU.intel?
+      url "${X86_LINUX_RELEASE_URL}"
+      sha256 "${X86_LINUX_RELEASE_SHA}"
+
+      def install
+        bin.install "upnotify"
+      end
+    end
+  end
+
+  test do
+    system "#{bin}/upnotify --version"
+  end
 end
