@@ -22,8 +22,13 @@ clean:
 build:
     cargo build --release --target {{target}}
 
+build-all: build-mac-m1 build-mac-x86 build-linux-amd64 build-linux-arm64
+
 build-mac-m1:
     just target=aarch64-apple-darwin assert-darwin-host archive
+
+build-mac-x86:
+    just target=x86_64-apple-darwin assert-darwin-host archive
 
 build-linux-amd64:
     docker run --rm --platform linux/amd64 --user "$(id -u)":"$(id -g)" -v "$PWD":/usr/src/myapp -w /usr/src/myapp \
@@ -116,3 +121,5 @@ homebrew-update: homebrew-program
     git commit -m "Added formula for upnotify {{version}}"
     git push origin HEAD
     gh pr create --title "Added formula for upnotify {{version}}" --body "Added formula for upnotify {{version}}"
+
+do-release: build-all linux-packages create-release upload-to-release homebrew-update
