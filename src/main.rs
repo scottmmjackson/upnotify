@@ -8,6 +8,8 @@ use reqwest::StatusCode;
 enum Result {
     StatusCode(StatusCode),
     ConnectError(reqwest::Error),
+    TimeoutError(reqwest::Error),
+    RequestError(reqwest::Error),
     OtherError(reqwest::Error),
     None,
 }
@@ -47,15 +49,29 @@ fn main() {
             Err(error) => {
                 match previous_status_option {
                     Result::ConnectError(_error) if error.is_connect() => {}
+                    Result::TimeoutError(_error) if error.is_timeout() => {}
+                    Result::RequestError(_error) if error.is_request() => {}
                     _ => {
                         if error.is_connect() {
                             println!("Status changed to connection failed");
+                        } else if error.is_timeout() {
+                            println!("Status changed to timed out");
+                        } else if error.is_request() {
+                            println!("Status changed to request error");
                         } else {
                             println!("Error: {}", error);
                         }
                     }
                 }
-                previous_status_option = if error.is_connect() { Result::ConnectError(error) } else { Result::OtherError(error) }
+                previous_status_option = if error.is_connect() {
+                    Result::ConnectError(error)
+                } else if error.is_timeout() {
+                    Result::TimeoutError(error)
+                } else if error.is_request() {
+                    Result::RequestError(error)
+                } else {
+                    Result::OtherError(error)
+                }
             }
         }
         sleep(Duration::from_secs(5));
