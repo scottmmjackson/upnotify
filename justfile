@@ -51,27 +51,32 @@ archive-all:
 archive: build
     just target={{target}} archive-{{archive_type}}
 
-package-none:
-    @echo "Nothing to do; specify a package_type"
-
-package-rpm:
+package:
     #!/usr/bin/env bash
     mkdir -p dist/{{target}}
     source build/{{target}}.env
-    nfpm package -p rpm -f <(VERSION={{version}} envsubst < build/nfpm.yaml.tmpl) --target dist/{{target}}/
+    nfpm package -p {{package_type}} \
+      -f <(VERSION={{version}} BIND_FILE=/usr/bin/upnotify envsubst < build/nfpm.yaml.tmpl) --target dist/{{target}}/
 
-package-deb:
+package-termux:
     #!/usr/bin/env bash
     mkdir -p dist/{{target}}
+    mkdir -p dist/tmp/
     source build/{{target}}.env
-    nfpm package -p deb -f <(VERSION={{version}} envsubst < build/nfpm.yaml.tmpl) --target dist/{{target}}/
+    nfpm package -p {{package_type}} \
+      -f <(VERSION={{version}} BIND_FILE=/data/data/com.termux/files envsubst < build/nfpm.yaml.tmpl) \
+      --target dist/tmp/
+    export DEBARCH="{{if target =~ '^x86_64' { "amd64" } else { "arm64" } }}"
+    mv dist/tmp/upnotify_{{version}}_${DEBARCH}.deb dist/{{target}}/upnotify_{{version}}_${DEBARCH}.termux.deb
+    rmdir dist/tmp
 
 linux-packages:
-    just target=x86_64-unknown-linux-gnu package-deb package-rpm
-    just target=aarch64-unknown-linux-gnu package-deb package-rpm
-
-package:
-    just package-{{package_type}}
+    just target=x86_64-unknown-linux-gnu package_type=deb package
+    just target=x86_64-unknown-linux-gnu package_type=rpm package
+    just target=x86_64-unknown-linux-gnu package_type=deb package-termux
+    just target=aarch64-unknown-linux-gnu package_type=deb package
+    just target=aarch64-unknown-linux-gnu package_type=rpm package
+    just target=aarch64-unknown-linux-gnu package_type=deb package-termux
 
 create-release:
     gh release create {{version}}
@@ -122,4 +127,17 @@ homebrew-update: homebrew-program
     git push origin HEAD
     gh pr create --title "Added formula for upnotify {{version}}" --body "Added formula for upnotify {{version}}"
 
-do-release: build-all linux-packages create-release upload-to-release homebrew-update
+do-release-build: build-all
+
+do-release-package-preflight:
+    @stat dist/aarch64-apple-darwin/upnotify-{{version}}-aarch64-apple-darwin.tar.gz > /dev/null
+    @stat dist/x86_64-apple-darwin/upnotify-{{version}}-x86_64-apple-darwin.tar.gz > /dev/null
+    @stat dist/aarch64-unknown-linux-gnu/upnotify-{{version}}-aarch64-unknown-linux-gnu.tar.gz > /dev/null
+    @stat dist/x86_64-unknown-linux-gnu/upnotify-{{version}}-x86_64-unknown-linux-gnu.tar.gz > /dev/null
+    # For linux packages
+    @stat target/x86_64-unknown-linux-gnu/release/upnotify > /dev/null
+    @stat target/aarch64-unknown-linux-gnu/release/upnotify > /dev/null
+
+do-release-package: do-release-package-preflight linux-packages create-release upload-to-release homebrew-update
+
+do-release: do-release-build do-release-package
