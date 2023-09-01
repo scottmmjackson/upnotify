@@ -7,6 +7,7 @@ arch:=arch()
 version:=`toml get Cargo.toml package.version --raw`
 archive_name:="upnotify-" + version + "-" + target
 msg:="Unknown error"
+binary_name:=if os_family == "windows" { "upnotify.exe" } else { "upnotify "}
 
 default: build
 
@@ -24,6 +25,10 @@ build:
 
 build-all: build-mac-m1 build-mac-x86 build-linux-amd64 build-linux-arm64
 
+build-windows:
+	just target=x86_64-pc-windows-msvc build
+	just target=aarch64-pc-windows-msvc build
+
 build-mac-m1:
     just target=aarch64-apple-darwin assert-darwin-host archive
 
@@ -40,16 +45,18 @@ build-linux-arm64:
 
 archive-tarball:
     mkdir -p dist/{{target}}
-    tar czf dist/{{target}}/{{archive_name}}.tar.gz -C target/{{target}}/release/ upnotify
+    tar czf dist/{{target}}/{{archive_name}}.tar.gz -C target/{{target}}/release/ {{binary_name}}
 
 archive-zip:
-    zip dist/{{target}}/{{archive_name}}.zip target/{{target}}/release/upnotify
-
-archive-all:
-    just archive-tarball archive-zip
+    mkdir -p dist/{{target}}
+    zip dist/{{target}}/{{archive_name}}.zip target/{{target}}/release/{{binary_name}}
 
 archive: build
     just target={{target}} archive-{{archive_type}}
+
+archive-windows:
+    just target=aarch64-pc-windows-msvc archive
+    just target=x86_64-pc-windows-msvc archive
 
 package:
     #!/usr/bin/env bash
