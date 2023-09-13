@@ -31,7 +31,7 @@ fn main() {
     let mut previous_status_option: Result = Result::None;
 
     loop {
-        let response = dbg!(client.get(url).send());
+        let response = client.get(url).send();
         previous_status_option = request_loop(response, previous_status_option);
         sleep(Duration::from_secs(5));
     }
