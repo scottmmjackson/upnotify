@@ -8,6 +8,7 @@ version:=`toml get Cargo.toml package.version --raw`
 archive_name:="upnotify-" + version + "-" + target
 msg:="Unknown error"
 binary_name:=if os_family == "windows" { "upnotify.exe" } else { "upnotify "}
+notes:=""
 
 default: build
 
@@ -58,6 +59,14 @@ archive-windows:
     just target=aarch64-pc-windows-msvc archive
     just target=x86_64-pc-windows-msvc archive
 
+archive-all:
+    just target=aarch64-apple-darwin archive-tarball
+    just target=x86_64-apple-darwin archive-tarball
+    just target=aarch64-unknown-linux-gnu archive-tarball
+    just target=x86_64-unknown-linux-gnu archive-tarball
+    just target=aarch64-pc-windows-msvc archive-zip
+    just target=x86_64-pc-windows-msvc archive-zip
+
 package:
     #!/usr/bin/env bash
     mkdir -p dist/{{target}}
@@ -86,7 +95,7 @@ linux-packages:
     just target=aarch64-unknown-linux-gnu package_type=deb package-termux
 
 create-release:
-    gh release create {{version}}
+    gh release create {{version}} --notes "{{notes}}"
 
 upload-to-release:
     gh release view {{version}} || just msg="Release does not exist" die

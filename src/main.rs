@@ -19,12 +19,13 @@ fn main() {
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
-        .arg(
-            arg!(--url <VALUE>).required(true).action(ArgAction::Set)
-        )
+        .arg(arg!(--url <VALUE>).required(true).action(ArgAction::Set))
+        .arg(arg!(--prefix <VALUE>).required(false).action(ArgAction::Set))
         .get_matches();
 
     let url = cli.get_one::<String>("url").expect("required");
+    let default_prefix = "".to_string();
+    let prefix = cli.get_one::<String>("prefix").unwrap_or(&default_prefix);
     let client = Client::builder()
         .danger_accept_invalid_certs(true)
         .build().unwrap_or_else(|_result| panic!("Unable to create client!"));
@@ -32,24 +33,24 @@ fn main() {
 
     loop {
         let response = client.get(url).send();
-        previous_status_option = request_loop(response, previous_status_option);
+        previous_status_option = request_loop(response, previous_status_option, prefix);
         sleep(Duration::from_secs(5));
     }
 }
 
 fn request_loop(response: reqwest::Result<reqwest::blocking::Response>,
-                previous_status_option: Result) -> Result {
+                previous_status_option: Result, prefix: &String) -> Result {
     return match response {
         Ok(result) => {
             let status_code = result.status();
             match previous_status_option {
                 Result::StatusCode(previous_status)
                 if status_code.as_u16() != previous_status.as_u16() => {
-                    println!("Status changed to {:?}", status_code)
+                    println!("{:?} Status changed to {:?}", prefix, status_code)
                 }
                 Result::None | Result::TimeoutError(_) | Result::ConnectError(_) |
                 Result::RequestError(_) | Result::OtherError(_) => {
-                    println!("Status changed to {:?}", status_code)
+                    println!("{:?} Status changed to {:?}", prefix, status_code)
                 }
                 _ => {}
             }
@@ -95,11 +96,12 @@ mod tests {
     #[test]
     fn test_request_loop() {
         // Unfortunately, reqwest doesn't really let us mock results :(
-        let result200 = reqwest::Result::Ok(Response::from(
+        let result200 = Ok(Response::from(
             HttpResponse::builder().status(StatusCode::OK).body("").unwrap()
         ));
+        let prefix = "".to_string();
         let result = request_loop(result200,
-                         Result::StatusCode(StatusCode::NOT_FOUND));
+                         Result::StatusCode(StatusCode::NOT_FOUND), &prefix);
         match result {
             Result::StatusCode(StatusCode::OK) => {  /* ok */ },
                 _ => { panic!("Unexpected status code!", )}
