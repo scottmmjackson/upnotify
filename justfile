@@ -9,6 +9,7 @@ archive_name:="upnotify-" + version + "-" + target
 msg:="Unknown error"
 binary_name:=if os_family == "windows" { "upnotify.exe" } else { "upnotify "}
 notes:=""
+extra_packages:=""
 
 default: build
 
@@ -108,6 +109,7 @@ upload-to-release:
         dist/x86_64-unknown-linux-gnu/upnotify-{{version}}-x86_64-unknown-linux-gnu.tar.gz \
         dist/x86_64-unknown-linux-gnu/upnotify-{{version}}.x86_64.rpm \
         dist/x86_64-unknown-linux-gnu/upnotify_{{version}}_amd64.deb \
+        {{extra_packages}}
         --clobber
 
 
