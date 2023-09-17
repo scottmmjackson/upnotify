@@ -112,6 +112,9 @@ upload-to-release:
         {{extra_packages}}
         --clobber
 
+upload-to-release-ci:
+    just extra_packages="dist/x86_64-pc-windows-msvc/upnotify-{{version}}-x86_64-pc-windows-msvc.zip
+    dist/aarch64-pc-windows-msvc/upnotify-{{version}}-aarch64-pc-windows-msvc.zip" upload-to-release
 
 homebrew-program:
     #!/usr/bin/env bash
@@ -156,6 +159,12 @@ do-release-package-preflight:
     @stat target/x86_64-unknown-linux-gnu/release/upnotify > /dev/null
     @stat target/aarch64-unknown-linux-gnu/release/upnotify > /dev/null
 
+do-release-package-preflight-ci: do-release-package-preflight
+    @stat dist/x86_64-pc-windows-msvc/upnotify-{{version}}-x86_64-pc-windows-msvc.zip  > /dev/null
+    @stat dist/aarch64-pc-windows-msvc/upnotify-{{version}}-aarch64-pc-windows-msvc.zip > /dev/null
+
 do-release-package: do-release-package-preflight linux-packages create-release upload-to-release homebrew-update
+
+do-release-package-ci: do-release-package-preflight-ci linux-packages create-release upload-to-release-ci homebrew-update
 
 do-release: do-release-build do-release-package
