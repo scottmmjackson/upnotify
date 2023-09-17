@@ -8,7 +8,7 @@ version:=`toml get Cargo.toml package.version --raw`
 archive_name:="upnotify-" + version + "-" + target
 msg:="Unknown error"
 binary_name:=if os_family == "windows" { "upnotify.exe" } else { "upnotify "}
-notes:=""
+notes:="release"
 extra_packages:=""
 
 default: build
@@ -113,7 +113,7 @@ upload-to-release:
         --clobber
 
 upload-to-release-ci:
-    just extra_packages="dist/x86_64-pc-windows-msvc/upnotify-{{version}}-x86_64-pc-windows-msvc.zip
+    just extra_packages="dist/x86_64-pc-windows-msvc/upnotify-{{version}}-x86_64-pc-windows-msvc.zip \
     dist/aarch64-pc-windows-msvc/upnotify-{{version}}-aarch64-pc-windows-msvc.zip" upload-to-release
 
 homebrew-program:

@@ -107,6 +107,7 @@ jobs:
           name: aarch64-pc-windows-msvc
           path: target/aarch64-pc-windows-msvc/release/upnotify.exe
   archive:
+    permissions: write-all
     runs-on: ubuntu-latest
     needs:
       - build-aarch64-apple-darwin
