@@ -146,4 +146,6 @@ jobs:
         with:
           command: install
           args: toml-cli
+      - run: gh release -R goreleaser/nfpm download -p 'nfpm_*_amd64.deb' -O nfpm.deb
+      - run: sudo dpkg -i nfpm.deb
       - run: just archive-all do-release-package-ci
