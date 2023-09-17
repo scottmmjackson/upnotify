@@ -109,7 +109,7 @@ upload-to-release:
         dist/x86_64-unknown-linux-gnu/upnotify-{{version}}-x86_64-unknown-linux-gnu.tar.gz \
         dist/x86_64-unknown-linux-gnu/upnotify-{{version}}.x86_64.rpm \
         dist/x86_64-unknown-linux-gnu/upnotify_{{version}}_amd64.deb \
-        {{extra_packages}}
+        {{extra_packages}} \
         --clobber
 
 upload-to-release-ci:
