@@ -43,6 +43,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install cross compilation tools
+        run: apt install -y gcc-aarch64-linux-gnu
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
