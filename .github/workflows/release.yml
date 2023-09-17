@@ -136,11 +136,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: x86_64-pc-windows-msvc
-          path: target/x86_64-pc-windows-msvc/release/upnotify
+          path: target/x86_64-pc-windows-msvc/release/upnotify.exe
       - uses: actions/download-artifact@v3
         with:
           name: aarch64-pc-windows-msvc
-          path: target/aarch64-pc-windows-msvc/release/upnotify
+          path: target/aarch64-pc-windows-msvc/release/upnotify.exe
       - uses: extractions/setup-just@v1
       - uses: actions-rs/cargo@v1
         with:
