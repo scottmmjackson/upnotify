@@ -17,8 +17,7 @@ jobs:
         with:
           command: build
           args: --release
-      - run: pwd
-      - run: ls
+      - run: tree target
       - uses: actions/upload-artifact@v3
         with:
           name: aarch64-apple-darwin
