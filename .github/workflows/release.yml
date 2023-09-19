@@ -153,6 +153,9 @@ jobs:
       - run: sudo dpkg -i nfpm.deb
       - run: git config --global user.name "Upnotify Github Actions Runner"
       - run: git config --global user.email "scottmmjackson@gmail.com"
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.UPNOTIFY_DEPLOY_KEY }}
       - run: just archive-all do-release-package-ci
         env:
           GH_TOKEN: ${{ github.token }}
