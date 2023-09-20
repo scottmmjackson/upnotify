@@ -109,9 +109,11 @@ upload-to-release:
         dist/aarch64-unknown-linux-gnu/upnotify-{{version}}-aarch64-unknown-linux-gnu.tar.gz \
         dist/aarch64-unknown-linux-gnu/upnotify-{{version}}-1.aarch64.rpm \
         dist/aarch64-unknown-linux-gnu/upnotify_{{version}}_arm64.deb \
+        dist/aarch64-unknown-linux-gnu/upnotify_{{version}}_arm64.termux.deb \
         dist/x86_64-unknown-linux-gnu/upnotify-{{version}}-x86_64-unknown-linux-gnu.tar.gz \
         dist/x86_64-unknown-linux-gnu/upnotify-{{version}}-1.x86_64.rpm \
         dist/x86_64-unknown-linux-gnu/upnotify_{{version}}_amd64.deb \
+        dist/x86_64-unknown-linux-gnu/upnotify_{{version}}_amd64.termux.deb \
         {{extra_packages}} \
         --clobber
 
