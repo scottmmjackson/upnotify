@@ -99,7 +99,7 @@ create-release: clobber-release
     gh release create {{version}} --notes "{{notes}}"
 
 clobber-release:
-    gh release delete {{version}} -y
+    gh release delete {{version}} -y || true
 
 upload-to-release:
     gh release view {{version}} || just msg="Release does not exist" die
