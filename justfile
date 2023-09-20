@@ -148,7 +148,7 @@ homebrew-update: homebrew-program
     cp ../program.rb Formula/upnotify.rb
     git add Formula/upnotify.rb
     git commit -m "Added formula for upnotify {{version}}"
-    git push origin HEAD
+    git push origin HEAD --force # force push because this could be a second run
     gh pr create --title "Added formula for upnotify {{version}}" --body "Added formula for upnotify {{version}}"
 
 do-release-build: build-all
