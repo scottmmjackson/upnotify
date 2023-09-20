@@ -142,7 +142,7 @@ homebrew-program:
 
 homebrew-update: homebrew-program
     #!/usr/bin/env bash
-    git clone https://github.com/scottmmjackson/homebrew-sj dist/tap
+    git clone git@github.com:scottmmjackson/homebrew-sj dist/tap
     cd dist/tap
     git checkout -b upnotify-{{version}}
     cp ../program.rb Formula/upnotify.rb
