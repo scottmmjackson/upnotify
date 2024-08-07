@@ -1,7 +1,7 @@
 use std::thread::sleep;
 use std::time::Duration;
 
-use clap::{arg, ArgAction, Command, crate_authors, crate_description, crate_name, crate_version};
+use clap::{arg, crate_authors, crate_description, crate_name, crate_version, ArgAction, Command};
 use reqwest::blocking::Client;
 use reqwest::StatusCode;
 
@@ -20,7 +20,11 @@ fn main() {
         .author(crate_authors!())
         .about(crate_description!())
         .arg(arg!(--url <VALUE>).required(true).action(ArgAction::Set))
-        .arg(arg!(--prefix <VALUE>).required(false).action(ArgAction::Set))
+        .arg(
+            arg!(--prefix <VALUE>)
+                .required(false)
+                .action(ArgAction::Set),
+        )
         .get_matches();
 
     let url = cli.get_one::<String>("url").expect("required");
@@ -28,7 +32,8 @@ fn main() {
     let prefix = cli.get_one::<String>("prefix").unwrap_or(&default_prefix);
     let client = Client::builder()
         .danger_accept_invalid_certs(true)
-        .build().unwrap_or_else(|_result| panic!("Unable to create client!"));
+        .build()
+        .unwrap_or_else(|_result| panic!("Unable to create client!"));
     let mut previous_status_option: Result = Result::None;
 
     loop {
@@ -38,18 +43,25 @@ fn main() {
     }
 }
 
-fn request_loop(response: reqwest::Result<reqwest::blocking::Response>,
-                previous_status_option: Result, prefix: &String) -> Result {
+fn request_loop(
+    response: reqwest::Result<reqwest::blocking::Response>,
+    previous_status_option: Result,
+    prefix: &String,
+) -> Result {
     return match response {
         Ok(result) => {
             let status_code = result.status();
             match previous_status_option {
                 Result::StatusCode(previous_status)
-                if status_code.as_u16() != previous_status.as_u16() => {
+                    if status_code.as_u16() != previous_status.as_u16() =>
+                {
                     println!("{:?} Status changed to {:?}", prefix, status_code)
                 }
-                Result::None | Result::TimeoutError(_) | Result::ConnectError(_) |
-                Result::RequestError(_) | Result::OtherError(_) => {
+                Result::None
+                | Result::TimeoutError(_)
+                | Result::ConnectError(_)
+                | Result::RequestError(_)
+                | Result::OtherError(_) => {
                     println!("{:?} Status changed to {:?}", prefix, status_code)
                 }
                 _ => {}
@@ -83,28 +95,36 @@ fn request_loop(response: reqwest::Result<reqwest::blocking::Response>,
                 Result::OtherError(error)
             }
         }
-    }
+    };
 }
 
 #[cfg(test)]
 mod tests {
-    use reqwest::blocking::Response;
-    use http::{Response as HttpResponse, StatusCode};
     use crate::request_loop;
     use crate::Result;
+    use http::{Response as HttpResponse, StatusCode};
+    use reqwest::blocking::Response;
 
     #[test]
     fn test_request_loop() {
         // Unfortunately, reqwest doesn't really let us mock results :(
         let result200 = Ok(Response::from(
-            HttpResponse::builder().status(StatusCode::OK).body("").unwrap()
+            HttpResponse::builder()
+                .status(StatusCode::OK)
+                .body("")
+                .unwrap(),
         ));
         let prefix = "".to_string();
-        let result = request_loop(result200,
-                         Result::StatusCode(StatusCode::NOT_FOUND), &prefix);
+        let result = request_loop(
+            result200,
+            Result::StatusCode(StatusCode::NOT_FOUND),
+            &prefix,
+        );
         match result {
-            Result::StatusCode(StatusCode::OK) => {  /* ok */ },
-                _ => { panic!("Unexpected status code!", )}
+            Result::StatusCode(StatusCode::OK) => { /* ok */ }
+            _ => {
+                panic!("Unexpected status code!",)
+            }
         }
     }
 }
